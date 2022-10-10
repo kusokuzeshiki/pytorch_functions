@@ -88,3 +88,37 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device
         item = np.array([epoch+1, avg_train_loss, avg_train_acc, avg_val_loss, avg_val_acc])
         history = np.vstack((history, item))
     return history
+
+# 学習ログ解析
+def evaluate_history(history):
+  #損失と精度の確認
+  print(f'初期状態: 損失: {history[0,3]:.5f} 精度: {history[0,4]:.5f}') 
+  print(f'最終状態: 損失: {history[-1,3]:.5f} 精度: {history[-1,4]:.5f}' )
+
+  num_epochs = len(history)
+  if num_epochs < 10:
+    unit = 1
+  else:
+    unit = num_epochs / 10
+
+  # 学習曲線の表示 (損失)
+  plt.figure(figsize=(9,8))
+  plt.plot(history[:,0], history[:,1], 'b', label='訓練')
+  plt.plot(history[:,0], history[:,3], 'k', label='検証')
+  plt.xticks(np.arange(0,num_epochs+1, unit))
+  plt.xlabel('繰り返し回数')
+  plt.ylabel('損失')
+  plt.title('学習曲線(損失)')
+  plt.legend()
+  plt.show()
+
+  # 学習曲線の表示 (精度)
+  plt.figure(figsize=(9,8))
+  plt.plot(history[:,0], history[:,2], 'b', label='訓練')
+  plt.plot(history[:,0], history[:,4], 'k', label='検証')
+  plt.xticks(np.arange(0,num_epochs+1,unit))
+  plt.xlabel('繰り返し回数')
+  plt.ylabel('精度')
+  plt.title('学習曲線(精度)')
+  plt.legend()
+  plt.show()
